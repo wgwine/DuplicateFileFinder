@@ -34,9 +34,10 @@
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.scanWholeFileCheckBox = new MaterialSkin.Controls.MaterialCheckBox();
+            this.materialRaisedButton1 = new MaterialSkin.Controls.MaterialRaisedButton();
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.materialLabel1 = new MaterialSkin.Controls.MaterialLabel();
-            this.materialRaisedButton1 = new MaterialSkin.Controls.MaterialRaisedButton();
             this.materialRaisedButton2 = new MaterialSkin.Controls.MaterialRaisedButton();
             this.outputPathTextField1 = new MaterialSkin.Controls.MaterialSingleLineTextField();
             this.materialRaisedButton3 = new MaterialSkin.Controls.MaterialRaisedButton();
@@ -56,16 +57,16 @@
             this.pathsListBox.FormattingEnabled = true;
             this.pathsListBox.Location = new System.Drawing.Point(4, 4);
             this.pathsListBox.Name = "pathsListBox";
-            this.pathsListBox.Size = new System.Drawing.Size(405, 498);
+            this.pathsListBox.Size = new System.Drawing.Size(405, 472);
             this.pathsListBox.TabIndex = 0;
             // 
             // progressBar1
             // 
             this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar1.Location = new System.Drawing.Point(85, 513);
+            this.progressBar1.Location = new System.Drawing.Point(7, 524);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(323, 36);
+            this.progressBar1.Size = new System.Drawing.Size(401, 25);
             this.progressBar1.TabIndex = 11;
             // 
             // backgroundWorker1
@@ -84,6 +85,7 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.scanWholeFileCheckBox);
             this.splitContainer1.Panel1.Controls.Add(this.pathsListBox);
             this.splitContainer1.Panel1.Controls.Add(this.materialRaisedButton1);
             this.splitContainer1.Panel1.Controls.Add(this.progressBar1);
@@ -95,11 +97,48 @@
             this.splitContainer1.SplitterDistance = 411;
             this.splitContainer1.TabIndex = 12;
             // 
+            // scanWholeFileCheckBox
+            // 
+            this.scanWholeFileCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.scanWholeFileCheckBox.AutoSize = true;
+            this.scanWholeFileCheckBox.Depth = 0;
+            this.scanWholeFileCheckBox.Font = new System.Drawing.Font("Roboto", 10F);
+            this.scanWholeFileCheckBox.Location = new System.Drawing.Point(85, 488);
+            this.scanWholeFileCheckBox.Margin = new System.Windows.Forms.Padding(0);
+            this.scanWholeFileCheckBox.MouseLocation = new System.Drawing.Point(-1, -1);
+            this.scanWholeFileCheckBox.MouseState = MaterialSkin.MouseState.HOVER;
+            this.scanWholeFileCheckBox.Name = "scanWholeFileCheckBox";
+            this.scanWholeFileCheckBox.Ripple = true;
+            this.scanWholeFileCheckBox.Size = new System.Drawing.Size(166, 30);
+            this.scanWholeFileCheckBox.TabIndex = 21;
+            this.scanWholeFileCheckBox.Text = "Scan Whole File(slow)";
+            this.scanWholeFileCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // materialRaisedButton1
+            // 
+            this.materialRaisedButton1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.materialRaisedButton1.Depth = 0;
+            this.materialRaisedButton1.Location = new System.Drawing.Point(7, 484);
+            this.materialRaisedButton1.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialRaisedButton1.Name = "materialRaisedButton1";
+            this.materialRaisedButton1.Primary = true;
+            this.materialRaisedButton1.Size = new System.Drawing.Size(75, 36);
+            this.materialRaisedButton1.TabIndex = 15;
+            this.materialRaisedButton1.Text = "SCAN";
+            this.materialRaisedButton1.UseVisualStyleBackColor = true;
+            this.materialRaisedButton1.Click += new System.EventHandler(this.searchButton_Click);
+            // 
             // treeView1
             // 
             this.treeView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.treeView1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(55)))), ((int)(((byte)(55)))));
+            this.treeView1.Font = new System.Drawing.Font("Courier New", 10.25F, System.Drawing.FontStyle.Bold);
+            this.treeView1.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.treeView1.LineColor = System.Drawing.Color.GreenYellow;
             this.treeView1.Location = new System.Drawing.Point(4, 4);
             this.treeView1.Name = "treeView1";
             this.treeView1.Size = new System.Drawing.Size(820, 545);
@@ -112,36 +151,21 @@
             this.materialLabel1.Depth = 0;
             this.materialLabel1.Font = new System.Drawing.Font("Roboto", 11F);
             this.materialLabel1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.materialLabel1.Location = new System.Drawing.Point(16, 91);
+            this.materialLabel1.Location = new System.Drawing.Point(314, 83);
             this.materialLabel1.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialLabel1.Name = "materialLabel1";
             this.materialLabel1.Size = new System.Drawing.Size(115, 19);
             this.materialLabel1.TabIndex = 14;
             this.materialLabel1.Text = "Paths to Search";
             // 
-            // materialRaisedButton1
-            // 
-            this.materialRaisedButton1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.materialRaisedButton1.Depth = 0;
-            this.materialRaisedButton1.Location = new System.Drawing.Point(4, 513);
-            this.materialRaisedButton1.MouseState = MaterialSkin.MouseState.HOVER;
-            this.materialRaisedButton1.Name = "materialRaisedButton1";
-            this.materialRaisedButton1.Primary = true;
-            this.materialRaisedButton1.Size = new System.Drawing.Size(75, 36);
-            this.materialRaisedButton1.TabIndex = 15;
-            this.materialRaisedButton1.Text = "SCAN";
-            this.materialRaisedButton1.UseVisualStyleBackColor = true;
-            this.materialRaisedButton1.Click += new System.EventHandler(this.searchButton_Click);
-            // 
             // materialRaisedButton2
             // 
             this.materialRaisedButton2.Depth = 0;
-            this.materialRaisedButton2.Location = new System.Drawing.Point(209, 80);
+            this.materialRaisedButton2.Location = new System.Drawing.Point(16, 75);
             this.materialRaisedButton2.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialRaisedButton2.Name = "materialRaisedButton2";
             this.materialRaisedButton2.Primary = true;
-            this.materialRaisedButton2.Size = new System.Drawing.Size(75, 27);
+            this.materialRaisedButton2.Size = new System.Drawing.Size(48, 27);
             this.materialRaisedButton2.TabIndex = 16;
             this.materialRaisedButton2.Text = "+";
             this.materialRaisedButton2.UseVisualStyleBackColor = true;
@@ -151,7 +175,7 @@
             // 
             this.outputPathTextField1.Depth = 0;
             this.outputPathTextField1.Hint = "";
-            this.outputPathTextField1.Location = new System.Drawing.Point(435, 84);
+            this.outputPathTextField1.Location = new System.Drawing.Point(435, 79);
             this.outputPathTextField1.MouseState = MaterialSkin.MouseState.HOVER;
             this.outputPathTextField1.Name = "outputPathTextField1";
             this.outputPathTextField1.PasswordChar = '\0';
@@ -168,7 +192,7 @@
             // 
             this.materialRaisedButton3.Depth = 0;
             this.materialRaisedButton3.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.materialRaisedButton3.Location = new System.Drawing.Point(730, 80);
+            this.materialRaisedButton3.Location = new System.Drawing.Point(730, 74);
             this.materialRaisedButton3.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialRaisedButton3.Name = "materialRaisedButton3";
             this.materialRaisedButton3.Primary = true;
@@ -184,21 +208,21 @@
             this.deleteCheckBox1.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.deleteCheckBox1.Depth = 0;
             this.deleteCheckBox1.Font = new System.Drawing.Font("Roboto", 10F);
-            this.deleteCheckBox1.Location = new System.Drawing.Point(1102, 79);
+            this.deleteCheckBox1.Location = new System.Drawing.Point(1107, 73);
             this.deleteCheckBox1.Margin = new System.Windows.Forms.Padding(0);
             this.deleteCheckBox1.MouseLocation = new System.Drawing.Point(-1, -1);
             this.deleteCheckBox1.MouseState = MaterialSkin.MouseState.HOVER;
             this.deleteCheckBox1.Name = "deleteCheckBox1";
             this.deleteCheckBox1.Ripple = true;
-            this.deleteCheckBox1.Size = new System.Drawing.Size(153, 30);
+            this.deleteCheckBox1.Size = new System.Drawing.Size(148, 30);
             this.deleteCheckBox1.TabIndex = 19;
-            this.deleteCheckBox1.Text = "Delete Original Files";
+            this.deleteCheckBox1.Text = "Delete Source Files";
             this.deleteCheckBox1.UseVisualStyleBackColor = false;
             // 
             // materialRaisedButton4
             // 
             this.materialRaisedButton4.Depth = 0;
-            this.materialRaisedButton4.Location = new System.Drawing.Point(290, 80);
+            this.materialRaisedButton4.Location = new System.Drawing.Point(70, 75);
             this.materialRaisedButton4.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialRaisedButton4.Name = "materialRaisedButton4";
             this.materialRaisedButton4.Primary = true;
@@ -219,9 +243,10 @@
             this.Controls.Add(this.materialRaisedButton2);
             this.Controls.Add(this.materialLabel1);
             this.Controls.Add(this.splitContainer1);
-            this.Name = "Duplicate File Finder";
+            this.Name = "Form1";
             this.Text = "Duplicate File Finder";
             this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
@@ -246,6 +271,7 @@
         private MaterialSkin.Controls.MaterialRaisedButton materialRaisedButton3;
         private MaterialSkin.Controls.MaterialCheckBox deleteCheckBox1;
         private MaterialSkin.Controls.MaterialRaisedButton materialRaisedButton4;
+        private MaterialSkin.Controls.MaterialCheckBox scanWholeFileCheckBox;
     }
 }
 
