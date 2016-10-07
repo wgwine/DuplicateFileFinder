@@ -34,8 +34,7 @@
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.scanWholeFileCheckBox = new MaterialSkin.Controls.MaterialCheckBox();
-            this.materialRaisedButton1 = new MaterialSkin.Controls.MaterialRaisedButton();
+            this.scanButton1 = new MaterialSkin.Controls.MaterialRaisedButton();
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.materialLabel1 = new MaterialSkin.Controls.MaterialLabel();
             this.materialRaisedButton2 = new MaterialSkin.Controls.MaterialRaisedButton();
@@ -43,6 +42,7 @@
             this.materialRaisedButton3 = new MaterialSkin.Controls.MaterialRaisedButton();
             this.deleteCheckBox1 = new MaterialSkin.Controls.MaterialCheckBox();
             this.materialRaisedButton4 = new MaterialSkin.Controls.MaterialRaisedButton();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -85,9 +85,9 @@
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.scanWholeFileCheckBox);
+            this.splitContainer1.Panel1.Controls.Add(this.comboBox1);
             this.splitContainer1.Panel1.Controls.Add(this.pathsListBox);
-            this.splitContainer1.Panel1.Controls.Add(this.materialRaisedButton1);
+            this.splitContainer1.Panel1.Controls.Add(this.scanButton1);
             this.splitContainer1.Panel1.Controls.Add(this.progressBar1);
             // 
             // splitContainer1.Panel2
@@ -97,38 +97,21 @@
             this.splitContainer1.SplitterDistance = 411;
             this.splitContainer1.TabIndex = 12;
             // 
-            // scanWholeFileCheckBox
+            // scanButton1
             // 
-            this.scanWholeFileCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            this.scanButton1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.scanWholeFileCheckBox.AutoSize = true;
-            this.scanWholeFileCheckBox.Depth = 0;
-            this.scanWholeFileCheckBox.Font = new System.Drawing.Font("Roboto", 10F);
-            this.scanWholeFileCheckBox.Location = new System.Drawing.Point(85, 488);
-            this.scanWholeFileCheckBox.Margin = new System.Windows.Forms.Padding(0);
-            this.scanWholeFileCheckBox.MouseLocation = new System.Drawing.Point(-1, -1);
-            this.scanWholeFileCheckBox.MouseState = MaterialSkin.MouseState.HOVER;
-            this.scanWholeFileCheckBox.Name = "scanWholeFileCheckBox";
-            this.scanWholeFileCheckBox.Ripple = true;
-            this.scanWholeFileCheckBox.Size = new System.Drawing.Size(166, 30);
-            this.scanWholeFileCheckBox.TabIndex = 21;
-            this.scanWholeFileCheckBox.Text = "Scan Whole File(slow)";
-            this.scanWholeFileCheckBox.UseVisualStyleBackColor = true;
-            // 
-            // materialRaisedButton1
-            // 
-            this.materialRaisedButton1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.materialRaisedButton1.Depth = 0;
-            this.materialRaisedButton1.Location = new System.Drawing.Point(7, 484);
-            this.materialRaisedButton1.MouseState = MaterialSkin.MouseState.HOVER;
-            this.materialRaisedButton1.Name = "materialRaisedButton1";
-            this.materialRaisedButton1.Primary = true;
-            this.materialRaisedButton1.Size = new System.Drawing.Size(75, 36);
-            this.materialRaisedButton1.TabIndex = 15;
-            this.materialRaisedButton1.Text = "SCAN";
-            this.materialRaisedButton1.UseVisualStyleBackColor = true;
-            this.materialRaisedButton1.Click += new System.EventHandler(this.searchButton_Click);
+            this.scanButton1.Depth = 0;
+            this.scanButton1.Enabled = false;
+            this.scanButton1.Location = new System.Drawing.Point(7, 484);
+            this.scanButton1.MouseState = MaterialSkin.MouseState.HOVER;
+            this.scanButton1.Name = "scanButton1";
+            this.scanButton1.Primary = true;
+            this.scanButton1.Size = new System.Drawing.Size(75, 36);
+            this.scanButton1.TabIndex = 15;
+            this.scanButton1.Text = "SCAN";
+            this.scanButton1.UseVisualStyleBackColor = true;
+            this.scanButton1.Click += new System.EventHandler(this.searchButton_Click);
             // 
             // treeView1
             // 
@@ -208,6 +191,7 @@
             this.deleteCheckBox1.AutoSize = true;
             this.deleteCheckBox1.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.deleteCheckBox1.Depth = 0;
+            this.deleteCheckBox1.Enabled = false;
             this.deleteCheckBox1.Font = new System.Drawing.Font("Roboto", 10F);
             this.deleteCheckBox1.Location = new System.Drawing.Point(1107, 73);
             this.deleteCheckBox1.Margin = new System.Windows.Forms.Padding(0);
@@ -231,7 +215,20 @@
             this.materialRaisedButton4.TabIndex = 20;
             this.materialRaisedButton4.Text = "Remove Selected";
             this.materialRaisedButton4.UseVisualStyleBackColor = true;
-            this.materialRaisedButton4.Click += new System.EventHandler(this.materialRaisedButton4_Click);
+            this.materialRaisedButton4.Click += new System.EventHandler(this.removePathButton4_Click);
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.ItemHeight = 13;
+            this.comboBox1.Location = new System.Drawing.Point(88, 493);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(319, 21);
+            this.comboBox1.TabIndex = 16;
+            this.comboBox1.Text = "File Scan Method";
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
             // Form1
             // 
@@ -248,7 +245,6 @@
             this.Name = "Form1";
             this.Text = "Duplicate File Finder";
             this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
@@ -267,13 +263,13 @@
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.TreeView treeView1;
         private MaterialSkin.Controls.MaterialLabel materialLabel1;
-        private MaterialSkin.Controls.MaterialRaisedButton materialRaisedButton1;
+        private MaterialSkin.Controls.MaterialRaisedButton scanButton1;
         private MaterialSkin.Controls.MaterialRaisedButton materialRaisedButton2;
         private MaterialSkin.Controls.MaterialSingleLineTextField outputPathTextField1;
         private MaterialSkin.Controls.MaterialRaisedButton materialRaisedButton3;
         private MaterialSkin.Controls.MaterialCheckBox deleteCheckBox1;
         private MaterialSkin.Controls.MaterialRaisedButton materialRaisedButton4;
-        private MaterialSkin.Controls.MaterialCheckBox scanWholeFileCheckBox;
+        private System.Windows.Forms.ComboBox comboBox1;
     }
 }
 
