@@ -40,16 +40,23 @@ namespace FileFilter
             {
                 Files[path] = new List<FileInfo>();
                 var folderPath = new DirectoryInfo(path);
-                FileInfo[] tempfiles = folderPath.GetFiles("*", System.IO.SearchOption.AllDirectories);
-                foreach(FileInfo fi in tempfiles)
+                try
                 {
-                    try
+                    FileInfo[] tempfiles = folderPath.GetFiles("*", System.IO.SearchOption.AllDirectories);
+                    foreach (FileInfo fi in tempfiles)
                     {
-                        string test = fi.FullName;
-                        Files[path].Add(fi);
+                        try
+                        {
+                            string test = fi.FullName;
+                            Files[path].Add(fi);
+                        }
+                        catch { }
                     }
-                    catch  { }
                 }
+                catch (UnauthorizedAccessException)
+                {
+                }
+
             }
             foreach (string toplevelfolder in Files.Keys)
             {
@@ -72,52 +79,59 @@ namespace FileFilter
                 //parallelizing might help speed if top level folders are on different drives
                 Parallel.ForEach(Files[toplevelfolder], file =>
                 {
-                    using (var stream = File.OpenRead(file.FullName))
+                    try
                     {
-                        if (stream != null)
+                        using (var stream = File.OpenRead(file.FullName))
                         {
-                            byte[] streamBuffer;
-                            if (scanWholeFileCheckBox.Checked)
+                            if (stream != null)
                             {
-                                //If file is larger than 2GB, we will stop there.
-                                int len = (int)Math.Min(stream.Length, int.MaxValue);
-                                streamBuffer = new byte[len];
-                                stream.Read(streamBuffer, 0, len);
-                            }
-                            else
-                            {
-                                //4kb is enough to determine uniqueness on basically any binary, and is probably overkill at that
-                                streamBuffer = new byte[4096];
-                                stream.Read(streamBuffer, 0, 4096);
-                            }
-
-                            string hash;
-                            using (var md5 = MD5.Create())
-                            {
-                                hash = BitConverter.ToString(md5.ComputeHash(streamBuffer)).Replace("-", "");
-                            }
-                            if (!string.IsNullOrEmpty(hash))
-                            {
-                                lock (thisLock)
+                                byte[] streamBuffer;
+                                if (scanWholeFileCheckBox.Checked)
                                 {
-                                    if (!FileHashed.ContainsKey(hash))
+                                    //If file is larger than 2GB, we will stop there.
+                                    int len = (int)Math.Min(stream.Length, int.MaxValue);
+                                    streamBuffer = new byte[len];
+                                    stream.Read(streamBuffer, 0, len);
+                                }
+                                else
+                                {
+                                    //4kb is enough to determine uniqueness on basically any binary, and is probably overkill at that
+                                    streamBuffer = new byte[32768];
+                                    stream.Read(streamBuffer, 0, 32768);
+                                }
+
+                                string hash;
+                                using (var md5 = MD5.Create())
+                                {
+                                    hash = BitConverter.ToString(md5.ComputeHash(streamBuffer)).Replace("-", "");
+                                }
+                                if (!string.IsNullOrEmpty(hash))
+                                {
+                                    lock (thisLock)
                                     {
-                                        FileHashed[hash] = new List<DoublePath>();
-                                        FileHashed[hash].Add(new DoublePath() { FullPath = file.FullName, LocalPath = file.FullName.Replace(toplevelfolder, ""), Size = file.Length });
-                                    }
-                                    else
-                                    {
-                                        FileHashed[hash].Add(new DoublePath() { FullPath = file.FullName, LocalPath = file.FullName.Replace(toplevelfolder, ""), Size = file.Length });
+                                        if (!FileHashed.ContainsKey(hash))
+                                        {
+                                            FileHashed[hash] = new List<DoublePath>();
+                                            FileHashed[hash].Add(new DoublePath() { FullPath = file.FullName, LocalPath = file.FullName.Replace(toplevelfolder, ""), Size = file.Length });
+                                        }
+                                        else
+                                        {
+                                            FileHashed[hash].Add(new DoublePath() { FullPath = file.FullName, LocalPath = file.FullName.Replace(toplevelfolder, ""), Size = file.Length });
+                                        }
                                     }
                                 }
+                                currentprogress++;
+                                backgroundWorker.ReportProgress((int)((currentprogress / progresscount) * 100));
                             }
-                            currentprogress++;
-                            backgroundWorker.ReportProgress((int)((currentprogress / progresscount) * 100));
                         }
+                    }
+                    catch
+                    {
+                        currentprogress++;
+                        backgroundWorker.ReportProgress((int)((currentprogress / progresscount) * 100));
                     }
                 });
             }
-            backgroundWorker.ReportProgress(100);
         }
         private void combineButton_Click(object sender, EventArgs e)
         {
@@ -182,7 +196,7 @@ namespace FileFilter
                             node.ToolTipText = "";
                             nodes.Add(node);
                         }
-                        TreeNode treeNode = new TreeNode(string.Format("{1}:        {2}", key, FileHashed[key][0].Size, BytesToString(FileHashed[key][0].Size)), nodes.ToArray());
+                        TreeNode treeNode = new TreeNode(string.Format("{1}:        {2}         {0}", key, FileHashed[key][0].Size, BytesToString(FileHashed[key][0].Size)), nodes.ToArray());
                         treeNode.Tag="Hash";
                         treeNode.ForeColor = Color.GreenYellow;
                         treeNode.ToolTipText = "";
@@ -300,6 +314,19 @@ namespace FileFilter
             int place = Convert.ToInt32(Math.Floor(Math.Log(bytes, 1024)));
             double num = Math.Round(bytes / Math.Pow(1024, place), 1);
             return (Math.Sign(byteCount) * num).ToString() + suf[place];
+        }
+
+        private void treeView1_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            if (e.Node.Tag.ToString() == "Path" && e.Button == MouseButtons.Left)
+            {
+                System.Diagnostics.Process.Start(e.Node.Text);
+            }
+        }
+
+        private void materialRaisedButton4_Click(object sender, EventArgs e)
+        {
+            pathsListBox.Items.Remove(pathsListBox.SelectedItem);
         }
     }
 }

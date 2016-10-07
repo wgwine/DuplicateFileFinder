@@ -144,6 +144,7 @@
             this.treeView1.Size = new System.Drawing.Size(820, 545);
             this.treeView1.TabIndex = 0;
             this.treeView1.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView1_NodeMouseClick);
+            this.treeView1.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView1_NodeMouseDoubleClick);
             // 
             // materialLabel1
             // 
@@ -230,6 +231,7 @@
             this.materialRaisedButton4.TabIndex = 20;
             this.materialRaisedButton4.Text = "Remove Selected";
             this.materialRaisedButton4.UseVisualStyleBackColor = true;
+            this.materialRaisedButton4.Click += new System.EventHandler(this.materialRaisedButton4_Click);
             // 
             // Form1
             // 
