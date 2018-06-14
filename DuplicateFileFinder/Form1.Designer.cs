@@ -34,15 +34,13 @@
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.scanButton1 = new MaterialSkin.Controls.MaterialRaisedButton();
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.materialLabel1 = new MaterialSkin.Controls.MaterialLabel();
             this.materialRaisedButton2 = new MaterialSkin.Controls.MaterialRaisedButton();
             this.outputPathTextField1 = new MaterialSkin.Controls.MaterialSingleLineTextField();
-            this.materialRaisedButton3 = new MaterialSkin.Controls.MaterialRaisedButton();
-            this.deleteCheckBox1 = new MaterialSkin.Controls.MaterialCheckBox();
             this.materialRaisedButton4 = new MaterialSkin.Controls.MaterialRaisedButton();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -96,6 +94,19 @@
             this.splitContainer1.Size = new System.Drawing.Size(1242, 552);
             this.splitContainer1.SplitterDistance = 411;
             this.splitContainer1.TabIndex = 12;
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.ItemHeight = 13;
+            this.comboBox1.Location = new System.Drawing.Point(88, 493);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(319, 21);
+            this.comboBox1.TabIndex = 16;
+            this.comboBox1.Text = "File Scan Method";
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
             // scanButton1
             // 
@@ -168,41 +179,9 @@
             this.outputPathTextField1.SelectionStart = 0;
             this.outputPathTextField1.Size = new System.Drawing.Size(289, 23);
             this.outputPathTextField1.TabIndex = 17;
-            this.outputPathTextField1.Text = "Output folder path";
+            this.outputPathTextField1.Text = "Search Value";
             this.outputPathTextField1.UseSystemPasswordChar = false;
             this.outputPathTextField1.Click += new System.EventHandler(this.textBox1_Click);
-            // 
-            // materialRaisedButton3
-            // 
-            this.materialRaisedButton3.Depth = 0;
-            this.materialRaisedButton3.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.materialRaisedButton3.Location = new System.Drawing.Point(730, 74);
-            this.materialRaisedButton3.MouseState = MaterialSkin.MouseState.HOVER;
-            this.materialRaisedButton3.Name = "materialRaisedButton3";
-            this.materialRaisedButton3.Primary = true;
-            this.materialRaisedButton3.Size = new System.Drawing.Size(121, 27);
-            this.materialRaisedButton3.TabIndex = 18;
-            this.materialRaisedButton3.Text = "Merge All Files";
-            this.materialRaisedButton3.UseVisualStyleBackColor = true;
-            this.materialRaisedButton3.Click += new System.EventHandler(this.combineButton_Click);
-            // 
-            // deleteCheckBox1
-            // 
-            this.deleteCheckBox1.AutoSize = true;
-            this.deleteCheckBox1.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.deleteCheckBox1.Depth = 0;
-            this.deleteCheckBox1.Enabled = false;
-            this.deleteCheckBox1.Font = new System.Drawing.Font("Roboto", 10F);
-            this.deleteCheckBox1.Location = new System.Drawing.Point(1107, 73);
-            this.deleteCheckBox1.Margin = new System.Windows.Forms.Padding(0);
-            this.deleteCheckBox1.MouseLocation = new System.Drawing.Point(-1, -1);
-            this.deleteCheckBox1.MouseState = MaterialSkin.MouseState.HOVER;
-            this.deleteCheckBox1.Name = "deleteCheckBox1";
-            this.deleteCheckBox1.Ripple = true;
-            this.deleteCheckBox1.Size = new System.Drawing.Size(148, 30);
-            this.deleteCheckBox1.TabIndex = 19;
-            this.deleteCheckBox1.Text = "Delete Source Files";
-            this.deleteCheckBox1.UseVisualStyleBackColor = false;
             // 
             // materialRaisedButton4
             // 
@@ -217,27 +196,12 @@
             this.materialRaisedButton4.UseVisualStyleBackColor = true;
             this.materialRaisedButton4.Click += new System.EventHandler(this.removePathButton4_Click);
             // 
-            // comboBox1
-            // 
-            this.comboBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.ItemHeight = 13;
-            this.comboBox1.Location = new System.Drawing.Point(88, 493);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(319, 21);
-            this.comboBox1.TabIndex = 16;
-            this.comboBox1.Text = "File Scan Method";
-            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1270, 677);
             this.Controls.Add(this.materialRaisedButton4);
-            this.Controls.Add(this.deleteCheckBox1);
-            this.Controls.Add(this.materialRaisedButton3);
             this.Controls.Add(this.outputPathTextField1);
             this.Controls.Add(this.materialRaisedButton2);
             this.Controls.Add(this.materialLabel1);
@@ -266,8 +230,6 @@
         private MaterialSkin.Controls.MaterialRaisedButton scanButton1;
         private MaterialSkin.Controls.MaterialRaisedButton materialRaisedButton2;
         private MaterialSkin.Controls.MaterialSingleLineTextField outputPathTextField1;
-        private MaterialSkin.Controls.MaterialRaisedButton materialRaisedButton3;
-        private MaterialSkin.Controls.MaterialCheckBox deleteCheckBox1;
         private MaterialSkin.Controls.MaterialRaisedButton materialRaisedButton4;
         private System.Windows.Forms.ComboBox comboBox1;
     }

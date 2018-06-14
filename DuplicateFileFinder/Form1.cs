@@ -16,6 +16,50 @@ using System.Diagnostics;
 
 namespace FileFilter
 {
+    static class ByteArrayRocks
+    {
+
+        static readonly int[] Empty = new int[0];
+
+        public static bool HasBytes(this byte[] self, byte[] candidate)
+        {
+            if (IsEmptyLocate(self, candidate))
+                return false;
+
+            var list = new List<int>();
+
+            for (int i = 0; i < self.Length; i++)
+            {
+                if (!IsMatch(self, i, candidate))
+                    continue;
+
+                return true;
+            }
+
+            return false;
+        }
+
+        static bool IsMatch(byte[] array, int position, byte[] candidate)
+        {
+            if (candidate.Length > (array.Length - position))
+                return false;
+
+            for (int i = 0; i < candidate.Length; i++)
+                if (array[position + i] != candidate[i])
+                    return false;
+
+            return true;
+        }
+
+        static bool IsEmptyLocate(byte[] array, byte[] candidate)
+        {
+            return array == null
+                || candidate == null
+                || array.Length == 0
+                || candidate.Length == 0
+                || candidate.Length > array.Length;
+        }
+    }
     public partial class Form1 : MaterialForm
     {
         string targetPath = "C:/merged";
@@ -55,7 +99,7 @@ namespace FileFilter
             comboBox1.Items.Add(new Item("8 bytes per 4KB", ScanMethod.Byte8Per4KB));
             comboBox1.Items.Add(new Item("8 bytes per kilobyte", ScanMethod.Bytes8PerKB));
             comboBox1.Items.Add(new Item("Byte per 128th of file", ScanMethod.BytePer128th));
-            comboBox1.SelectedIndex = 0;
+            comboBox1.SelectedIndex = 1;
         }
 
         private void searchButton_Click(object sender, EventArgs e)
@@ -93,6 +137,7 @@ namespace FileFilter
             backgroundWorker1.RunWorkerAsync();
 
         }
+
         public void ProcessFile(FileInfo file, string toplevelfolder)
         {
             try
@@ -147,23 +192,19 @@ namespace FileFilter
                                 break;
                         }
 
-                        string hash;
-                        using (var md5 = MD5.Create())
-                        {
-                            hash = BitConverter.ToString(md5.ComputeHash(streamBuffer)).Replace("-", "");
-                        }
-                        if (!string.IsNullOrEmpty(hash))
+                        byte[] pattern = Encoding.ASCII.GetBytes(outputPathTextField1.Text);
+                        if(streamBuffer.HasBytes(pattern))
                         {
                             lock (thisLock)
                             {
-                                if (!FileHashed.ContainsKey(hash))
+                                if (!FileHashed.ContainsKey(file.FullName))
                                 {
-                                    FileHashed[hash] = new List<DoublePath>();
-                                    FileHashed[hash].Add(new DoublePath() { FullPath = file.FullName, LocalPath = file.FullName.Replace(toplevelfolder, ""), Size = file.Length });
+                                    FileHashed[file.FullName] = new List<DoublePath>();
+                                    FileHashed[file.FullName].Add(new DoublePath() { FullPath = file.FullName, LocalPath = file.FullName.Replace(toplevelfolder, ""), Size = file.Length });
                                 }
                                 else
                                 {
-                                    FileHashed[hash].Add(new DoublePath() { FullPath = file.FullName, LocalPath = file.FullName.Replace(toplevelfolder, ""), Size = file.Length });
+                                    FileHashed[file.FullName].Add(new DoublePath() { FullPath = file.FullName, LocalPath = file.FullName.Replace(toplevelfolder, ""), Size = file.Length });
                                 }
                             }
                         }
@@ -182,7 +223,7 @@ namespace FileFilter
             time.Start();
             var backgroundWorker = sender as BackgroundWorker;
             FileHashed = new Dictionary<string, List<DoublePath>>();
-            bool isParallel = false;
+            bool isParallel = true;
             if (isParallel)
             {
                 Parallel.ForEach(Files.Keys, toplevelfolder =>
@@ -210,48 +251,6 @@ namespace FileFilter
             time.Stop();
             backgroundWorker.ReportProgress(100);
         }
-        private void combineButton_Click(object sender, EventArgs e)
-        {
-
-            if (!string.IsNullOrEmpty(targetPath))
-            {
-                if (!Directory.Exists(targetPath))
-                {
-                    Directory.CreateDirectory(targetPath);
-                }
-                Parallel.ForEach(FileHashed.Keys, file =>
-                {
-                    DoublePath unique = FileHashed[file].First();
-                    string newroot = targetPath;
-
-                    string fileName = System.IO.Path.GetFileNameWithoutExtension(unique.FullPath);
-                    //string fileNamewext = System.IO.Path.GetFileName(unique.FullPath);
-                    string extension = System.IO.Path.GetExtension(unique.FullPath);
-                    //string oldroot = System.IO.Path.GetPathRoot(unique.FullPath);
-                    //string oldmiddle = unique.FullPath.Replace(oldroot, "").Replace(fileNamewext, "");
-
-                    string destFile = System.IO.Path.Combine(newroot, string.Format("{0}{1}", fileName, extension));
-
-                    int counter = 2;
-
-                    while (File.Exists(destFile))
-                    {
-                        destFile = System.IO.Path.Combine(newroot, string.Format("{0}({1}){2}", fileName, counter, extension));
-                        counter++;
-                    }
-
-                    File.Copy(unique.FullPath, destFile, true);
-
-                    if (deleteCheckBox1.Checked)
-                    {
-                        foreach (DoublePath fileref in FileHashed[file])
-                        {
-                            FileSystem.DeleteFile(fileref.FullPath, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
-                        }
-                    }
-                });
-            }
-        }
 
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
@@ -262,25 +261,21 @@ namespace FileFilter
                 treeView1.BeginUpdate();
                 foreach (string key in FileHashed.Keys)
                 {
-                    if (FileHashed[key].Count > 1)
+                    List<TreeNode> nodes = new List<TreeNode>();
+
+                    foreach (DoublePath dblpath in FileHashed[key])
                     {
-                        List<TreeNode> nodes = new List<TreeNode>();
-
-                        foreach (DoublePath dblpath in FileHashed[key])
-                        {
-                            TreeNode node = new TreeNode(dblpath.FullPath);
-                            node.Tag = "Path";
-                            node.ToolTipText = "";
-                            nodes.Add(node);
-                        }
-                        TreeNode treeNode = new TreeNode(string.Format("{1}:        {2}         {0}", key, FileHashed[key][0].Size, BytesToString(FileHashed[key][0].Size)), nodes.ToArray());
-                        treeNode.Tag = "Hash";
-                        treeNode.ForeColor = Color.GreenYellow;
-                        treeNode.ToolTipText = "";
-                        treeNode.Expand();
-                        treeView1.Nodes.Add(treeNode);
-
+                        TreeNode node = new TreeNode(dblpath.FullPath);
+                        node.Tag = "Path";
+                        node.ToolTipText = "";
+                        nodes.Add(node);
                     }
+                    TreeNode treeNode = new TreeNode(string.Format("{1}:        {2}         {0}", key, FileHashed[key][0].Size, BytesToString(FileHashed[key][0].Size)), nodes.ToArray());
+                    treeNode.Tag = "Hash";
+                    treeNode.ForeColor = Color.GreenYellow;
+                    treeNode.ToolTipText = "";
+                    treeNode.Expand();
+                    treeView1.Nodes.Add(treeNode);                    
                 }
                 TreeNode timenode = new TreeNode(string.Format("{0}ms", time.ElapsedMilliseconds));
                 timenode.Tag = "time";
@@ -359,36 +354,31 @@ namespace FileFilter
         private void textBox1_Click(object sender, EventArgs e)
         {
 
-            // Display the openFile dialog.
-            DialogResult result = addPathDialog.ShowDialog();
+            //// Display the openFile dialog.
+            //DialogResult result = addPathDialog.ShowDialog();
 
-            // OK button was pressed. 
-            if (result == DialogResult.OK)
-            {
-                targetPath = addPathDialog.SelectedPath;
-                outputPathTextField1.Text = targetPath;
-                Invalidate();
+            //// OK button was pressed. 
+            //if (result == DialogResult.OK)
+            //{
+            //    targetPath = addPathDialog.SelectedPath;
+            //    outputPathTextField1.Text = targetPath;
+            //    Invalidate();
 
-            }
-            // Cancel button was pressed. 
-            else if (result == DialogResult.Cancel)
-            {
-                return;
-            }
+            //}
+            //// Cancel button was pressed. 
+            //else if (result == DialogResult.Cancel)
+            //{
+            //    return;
+            //}
         }
         private void treeView1_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             if (e.Node.Tag.ToString() == "Path" && e.Button == MouseButtons.Right)
             {
-                DialogResult dialogResult = MessageBox.Show("Send this file to the recycle bin?", "Delete File?", MessageBoxButtons.YesNo);
-                if (dialogResult == DialogResult.Yes)
-                {
-                    FileSystem.DeleteFile(e.Node.Text, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
-                    treeView1.Nodes.Remove(e.Node);
-                }
-                else if (dialogResult == DialogResult.No)
-                {
-                }
+                string argument = "/select, \"" + e.Node.Text + "\"";
+
+                System.Diagnostics.Process.Start("explorer.exe", argument);
+
             }
         }
         static String BytesToString(long byteCount)
